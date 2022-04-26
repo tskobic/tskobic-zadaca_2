@@ -1,2 +1,5 @@
-org/foi/nwtis/tskobic/zadaca_2/dretve/PreuzimanjeRasporedaAerodroma.class
-org/foi/nwtis/tskobic/zadaca_2/slusaci/SlusacAplikacije.class
+org\foi\nwtis\tskobic\zadaca_2\rest\RestProblemi.class
+org\foi\nwtis\tskobic\zadaca_2\rest\RestServis.class
+org\foi\nwtis\tskobic\zadaca_2\rest\RestAerodromi.class
+org\foi\nwtis\tskobic\zadaca_2\dretve\PreuzimanjeRasporedaAerodroma.class
+org\foi\nwtis\tskobic\zadaca_2\slusaci\SlusacAplikacije.class

@@ -14,40 +14,39 @@ import jakarta.servlet.annotation.WebListener;
 @WebListener
 public class SlusacAplikacije implements ServletContextListener {
 	PreuzimanjeRasporedaAerodroma pra = null;
-
-	/**
-	 * Default constructor.
-	 */
-	public SlusacAplikacije() {
-	}
+	
+    /**
+     * Default constructor. 
+     */
+    public SlusacAplikacije() {
+    }
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 //		ServletContext context = sce.getServletContext();
 //		String nazivDatoteke = context.getInitParameter("konfiguracija");
 //		KonfiguracijaBP konfig = null;
-//		String putanja = context.getRealPath("/WEB-INF") + java.io.File.separator;
-//
+//		String putanja = context.getRealPath("/WEB-INF") + java.io.File.separator; 
 //		try {
 //			konfig = new PostavkeBazaPodataka(putanja + nazivDatoteke);
 //			konfig.ucitajKonfiguraciju();
 //			context.setAttribute("Postavke", konfig);
-//			System.out.println("Učitana konfiguracijska datoteka.");
+//			System.out.println("UÄŤitana konfiguracijska datoteka.");
 //		} catch (NeispravnaKonfiguracija e1) {
 //			e1.printStackTrace();
 //			return;
 //		}
-		
+
 		pra = new PreuzimanjeRasporedaAerodroma();
 		pra.start();
 		ServletContextListener.super.contextInitialized(sce);
 	}
-
+	
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		ServletContext context = sce.getServletContext();
 		context.removeAttribute("Postavke");
-
+		
 		if(pra != null) {
 			pra.interrupt();
 		}
