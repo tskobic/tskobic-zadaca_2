@@ -14,10 +14,26 @@ import jakarta.ws.rs.client.WebTarget;
 import jakarta.ws.rs.core.Response;
 
 public class AerodromiKlijent {
-
+	
 	public List<Aerodrom> dajSveAerodrome() {
 		Client client = ClientBuilder.newClient();
-		WebTarget webResource = client.target("http://webpredmeti:8080/tskobic-zadaca_2_wa_1/api/aerodromi");
+		// TODO preuzeti adresu iz postavki
+		WebTarget webResource = client.target("http://localhost:8080/tskobic-zadaca_2_wa_1/api/aerodromi");
+		Response restOdgovor = webResource.request().header("Accept", "application/json").get();
+		List<Aerodrom> aerodromi = null;
+		if (restOdgovor.getStatus() == 200) {
+			String odgovor = restOdgovor.readEntity(String.class);
+			Gson gson = new Gson();
+			aerodromi = new ArrayList<>();
+			aerodromi.addAll(Arrays.asList(gson.fromJson(odgovor, Aerodrom[].class)));
+		}
+		return aerodromi;
+	}
+
+	public List<Aerodrom> dajAerodrom(String icao) {
+		Client client = ClientBuilder.newClient();
+		// TODO preuzeti adresu iz postavki
+		WebTarget webResource = client.target("http://localhost:8080/tskobic-zadaca_2_wa_1/api/aerodromi").path(icao);
 		Response restOdgovor = webResource.request().header("Accept", "application/json").get();
 		List<Aerodrom> aerodromi = null;
 		if (restOdgovor.getStatus() == 200) {

@@ -17,7 +17,7 @@
 		<ServerEE.hostname>localhost</ServerEE.hostname>
 		<ServerEE.domainName>domain1</ServerEE.domainName>
 
-		
+		<!--
 		<ServerEE.glassfish.home>/opt/glassfish6/</ServerEE.glassfish.home>
 		<ServerEE.glassfish.Web.home>/opt/glassfish6-web/</ServerEE.glassfish.Web.home>
 		<ServerEE.glassfish.containerName>glassfish6x</ServerEE.glassfish.containerName>
@@ -28,8 +28,8 @@
 		<ServerEE.home>${ServerEE.payara.Web.home}</ServerEE.home>
 		<ServerEE.domainDir>${ServerEE.home}/glassfish/domains</ServerEE.domainDir>
 		<ServerEE.containerName>${ServerEE.payara.containerName}</ServerEE.containerName>
+		-->
 		
-		<!--
 		<ServerEE.glassfish.home>C:\\glassfish6\\</ServerEE.glassfish.home>
 		<ServerEE.glassfish.Web.home>C:\\glassfish6-web\\</ServerEE.glassfish.Web.home>
 		<ServerEE.glassfish.containerName>glassfish6x</ServerEE.glassfish.containerName>
@@ -40,7 +40,7 @@
 		<ServerEE.home>${ServerEE.payara.Web.home}</ServerEE.home>
 		<ServerEE.domainDir>${ServerEE.home}\\glassfish\\domains</ServerEE.domainDir>
 		<ServerEE.containerName>${ServerEE.payara.containerName}</ServerEE.containerName>
-		-->
+		
 	</properties>
 
 	<repositories>
