@@ -12,20 +12,20 @@ import jakarta.mvc.View;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 
-@Controller @Path("aerodromi")
+@Controller
+@Path("aerodromi")
 @RequestScoped
-
 public class PregledAerodroma {
-	
-	@Inject private Models model;
-	
+
+	@Inject
+	private Models model;
+
 	@GET
 	@Path("pocetak")
 	@View("index.jsp")
 	public void pocetak() {
-		
 	}
-	
+
 	@GET
 	@Path("pregledSvihAerodroma")
 	@View("pregledSvihAerodroma.jsp")
@@ -34,4 +34,5 @@ public class PregledAerodroma {
 		List<Aerodrom> aerodromi = ak.dajSveAerodrome();
 		model.put("aerodromi", aerodromi);
 	}
+
 }
