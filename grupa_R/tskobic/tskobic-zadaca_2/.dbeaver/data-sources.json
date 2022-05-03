@@ -1,0 +1,108 @@
+{
+	"folders": {},
+	"connections": {
+		"hsqldb_server-1808b765f54-320671d843ffcec3": {
+			"provider": "generic",
+			"driver": "hsqldb_server",
+			"name": "HSQLDB - nwtis_g1 - nwtis_g1",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "9001",
+				"database": "nwtis_g1",
+				"url": "jdbc:hsqldb:hsql://localhost:9001/nwtis_g1",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		},
+		"hsqldb_server-1808b7708ff-57683113145d1c69": {
+			"provider": "generic",
+			"driver": "hsqldb_server",
+			"name": "HSQLDB - nwtis_g1 - SA",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "9001",
+				"database": "nwtis_g1",
+				"url": "jdbc:hsqldb:hsql://localhost:9001/nwtis_g1",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		},
+		"mysql8-1808b774481-608523e58c26e3b7": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "MySQL - localhost - root",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"url": "jdbc:mysql://localhost:3306/",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		},
+		"mysql8-1808b7744c5-55b7de24dc7a7195": {
+			"provider": "mysql",
+			"driver": "mysql8",
+			"name": "MySQL nwtis_g1 - nwtis_g1",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"host": "localhost",
+				"port": "3306",
+				"database": "nwtis_g1",
+				"url": "jdbc:mysql://localhost:3306/nwtis_g1",
+				"type": "dev",
+				"properties": {
+					"connectTimeout": "20000",
+					"rewriteBatchedStatements": "true",
+					"enabledTLSProtocols": "TLSv1,TLSv1.1,TLSv1.2",
+					"allowPublicKeyRetrieval": "TRUE",
+					"useSSL": "FALSE"
+				},
+				"auth-model": "native"
+			}
+		},
+		"hsqldb_embedded-1808b774560-ff61af1a9546dd8": {
+			"provider": "generic",
+			"driver": "hsqldb_embedded",
+			"name": "nwtis_g1",
+			"save-password": true,
+			"read-only": false,
+			"configuration": {
+				"database": "nwtis_g1;shutdown=true",
+				"url": "jdbc:hsqldb:mem:nwtis_g1;shutdown=true",
+				"type": "dev",
+				"auth-model": "native"
+			}
+		}
+	},
+	"virtual-models": {
+		"hsqldb_server-1808b7708ff-57683113145d1c69": {
+			"PUBLIC": {
+				"PUBLIC": {
+					"@properties": {
+						"erd.diagram.state": {
+							"serialized": "<diagram version=\"1\" name=\"empty\" time=\"202205032151\"><entities><data-source id=\"hsqldb_server-1808b7708ff-57683113145d1c69\"><entity id=\"1\" name=\"AERODROMI_DOLASCI\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_DOLASCI\" order=\"0\" x=\"900\" y=\"142\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"2\" name=\"AERODROMI_POLASCI\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_POLASCI\" order=\"1\" x=\"536\" y=\"139\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"3\" name=\"AERODROMI_PRACENI\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_PRACENI\" order=\"2\" x=\"552\" y=\"622\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"4\" name=\"AERODROMI_PROBLEMI\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_PROBLEMI\" order=\"3\" x=\"1028\" y=\"608\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"5\" name=\"AIRPORTS\" fq-name=\"PUBLIC.PUBLIC.AIRPORTS\" order=\"4\" x=\"781\" y=\"537\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"6\" name=\"GRUPE\" fq-name=\"PUBLIC.PUBLIC.GRUPE\" order=\"5\" x=\"267\" y=\"23\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"7\" name=\"KORISNICI\" fq-name=\"PUBLIC.PUBLIC.KORISNICI\" order=\"6\" x=\"237\" y=\"131\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity><entity id=\"8\" name=\"ULOGE\" fq-name=\"PUBLIC.PUBLIC.ULOGE\" order=\"7\" x=\"25\" y=\"109\"><path name=\"PUBLIC\"/><path name=\"PUBLIC\"/></entity></data-source></entities><relations><relation name=\"SYS_FK_10173\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_DOLASCI.SYS_FK_10173\" type=\"fk\" pk-ref=\"5\" fk-ref=\"1\"/><relation name=\"SYS_FK_10141\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_POLASCI.SYS_FK_10141\" type=\"fk\" pk-ref=\"5\" fk-ref=\"2\"/><relation name=\"SYS_FK_10195\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_PRACENI.SYS_FK_10195\" type=\"fk\" pk-ref=\"5\" fk-ref=\"3\"/><relation name=\"SYS_FK_10207\" fq-name=\"PUBLIC.PUBLIC.AERODROMI_PROBLEMI.SYS_FK_10207\" type=\"fk\" pk-ref=\"5\" fk-ref=\"4\"/><relation name=\"SYS_FK_10119\" fq-name=\"PUBLIC.PUBLIC.ULOGE.SYS_FK_10119\" type=\"fk\" pk-ref=\"6\" fk-ref=\"8\"/><relation name=\"SYS_FK_10118\" fq-name=\"PUBLIC.PUBLIC.ULOGE.SYS_FK_10118\" type=\"fk\" pk-ref=\"7\" fk-ref=\"8\"/></relations></diagram>"
+						}
+					}
+				}
+			}
+		}
+	},
+	"connection-types": {
+		"dev": {
+			"name": "Development",
+			"color": "255,255,255",
+			"description": "Regular development database",
+			"auto-commit": true,
+			"confirm-execute": false,
+			"confirm-data-change": false,
+			"auto-close-transactions": false
+		}
+	}
+}
