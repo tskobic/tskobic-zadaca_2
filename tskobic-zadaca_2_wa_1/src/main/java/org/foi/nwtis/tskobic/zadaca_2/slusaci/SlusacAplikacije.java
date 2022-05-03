@@ -1,5 +1,8 @@
 package org.foi.nwtis.tskobic.zadaca_2.slusaci;
 
+import org.foi.nwtis.tskobic.vjezba_03.konfiguracije.NeispravnaKonfiguracija;
+import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.KonfiguracijaBP;
+import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 import org.foi.nwtis.tskobic.zadaca_2.dretve.PreuzimanjeRasporedaAerodroma;
 
 import jakarta.servlet.ServletContext;
@@ -23,19 +26,19 @@ public class SlusacAplikacije implements ServletContextListener {
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
-//		ServletContext context = sce.getServletContext();
-//		String nazivDatoteke = context.getInitParameter("konfiguracija");
-//		KonfiguracijaBP konfig = null;
-//		String putanja = context.getRealPath("/WEB-INF") + java.io.File.separator; 
-//		try {
-//			konfig = new PostavkeBazaPodataka(putanja + nazivDatoteke);
-//			konfig.ucitajKonfiguraciju();
-//			context.setAttribute("Postavke", konfig);
-//			System.out.println("UÄŤitana konfiguracijska datoteka.");
-//		} catch (NeispravnaKonfiguracija e1) {
-//			e1.printStackTrace();
-//			return;
-//		}
+		ServletContext context = sce.getServletContext();
+		String nazivDatoteke = context.getInitParameter("konfiguracija");
+		KonfiguracijaBP konfig = null;
+		String putanja = context.getRealPath("/WEB-INF") + java.io.File.separator; 
+		try {
+			konfig = new PostavkeBazaPodataka(putanja + nazivDatoteke);
+			konfig.ucitajKonfiguraciju();
+			context.setAttribute("Postavke", konfig);
+			System.out.println("Učitana konfiguracijska datoteka.");
+		} catch (NeispravnaKonfiguracija e1) {
+			e1.printStackTrace();
+			return;
+		}
 
 		pra = new PreuzimanjeRasporedaAerodroma();
 		pra.start();
