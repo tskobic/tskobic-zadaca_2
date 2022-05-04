@@ -14,8 +14,8 @@
 <entry key="jdbc.hsqldb.hsql">org.hsqldb.jdbcDriver</entry>
 <entry key="LocationIQ.token">xxxxxx</entry>
 <entry key="OpenWeatherMap.apikey">xxxxx</entry>
-<entry key="OpenSkyNetwork.korisnik">xxxxx</entry>
-<entry key="OpenSkyNetwork.lozinka">xxxxx</entry>
+<entry key="OpenSkyNetwork.korisnik">tskobic</entry>
+<entry key="OpenSkyNetwork.lozinka">nwtis22</entry>
 <entry key="dnevnik.datoteka">NWTiS_dnevnik.txt</entry>
 <entry key="ciklus.vrijeme">300</entry>
 <entry key="ciklus.korekcija">10</entry>
