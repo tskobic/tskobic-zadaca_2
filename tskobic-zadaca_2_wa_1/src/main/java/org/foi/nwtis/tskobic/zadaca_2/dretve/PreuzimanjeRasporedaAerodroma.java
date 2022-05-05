@@ -1,13 +1,19 @@
 package org.foi.nwtis.tskobic.zadaca_2.dretve;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.foi.nwtis.podaci.Aerodrom;
 import org.foi.nwtis.rest.klijenti.NwtisRestIznimka;
 import org.foi.nwtis.rest.klijenti.OSKlijent;
 import org.foi.nwtis.rest.podaci.AvionLeti;
-import org.foi.nwtis.rest.podaci.Lokacija;
+import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiPraceniDAO;
+
+import jakarta.servlet.ServletContext;
 
 public class PreuzimanjeRasporedaAerodroma extends Thread {
 
@@ -20,19 +26,25 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 	String korisnik;
 	String lozinka;
 	OSKlijent oSKlijent;
+	ServletContext context;
+	PostavkeBazaPodataka konfig;
+	
+	public PreuzimanjeRasporedaAerodroma(ServletContext context) {
+		this.context = context;
+		this.konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
+	}
 
 	@Override
 	public synchronized void start() {
-		// TODO preuzmi iz konfiguracijskih podataka
-		preuzimanjeOd = 1648764000;
-		preuzimanjeDo = 1648850400;
-		preuzimanjeVrijeme = 6 * 60 * 60;
-		vrijemePauza = 20;
-		vrijemeCiklusa = 300 * 1000;
+		preuzimanjeOd = izvrsiDatumPretvaranje(konfig.dajPostavku("preuzimanje.od"));
+		preuzimanjeDo = izvrsiDatumPretvaranje(konfig.dajPostavku("preuzimanje.do"));
+		preuzimanjeVrijeme = Long.parseLong(konfig.dajPostavku("preuzimanje.vrijeme")) * 60 * 60;
+		vrijemePauza = Long.parseLong(konfig.dajPostavku("preuzimanje.pauza"));
+		vrijemeCiklusa = Long.parseLong(konfig.dajPostavku("ciklus.vrijeme")) * 1000;
 		vrijemeObrade = preuzimanjeOd;
 
-		korisnik = "xxxx";
-		lozinka = "yyyy";
+		korisnik = konfig.dajPostavku("OpenSkyNetwork.korisnik");
+		lozinka = konfig.dajPostavku("OpenSkyNetwork.lozinka");
 
 		oSKlijent = new OSKlijent(korisnik, lozinka);
 
@@ -42,18 +54,8 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 	@Override
 	public void run() {
 		while (vrijemeObrade < preuzimanjeDo) {
-			// TODO preuzmi aerodrome iz tablice AERODROMI_PRACENI
-			List<Aerodrom> aerodromi = new ArrayList<>();
-			Aerodrom ad = new Aerodrom("LDZA", "Airport Zagreb", "HR", new Lokacija("0", "0"));
-			aerodromi.add(ad);
-			ad = new Aerodrom("LDVA", "Airport Varaždin", "HR", new Lokacija("0", "0"));
-			aerodromi.add(ad);
-			ad = new Aerodrom("EDDF", "Airport Frankfurt", "DE", new Lokacija("0", "0"));
-			aerodromi.add(ad);
-			ad = new Aerodrom("EDDB", "Airport Berlin", "DE", new Lokacija("0", "0"));
-			aerodromi.add(ad);
-			ad = new Aerodrom("LOWW", "Airport Vienna", "AT", new Lokacija("0", "0"));
-			aerodromi.add(ad);
+			AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
+			List<Aerodrom> aerodromi = aerodromiPraceniDAO.dohvatiPraceneAerodrome(konfig);
 
 			for (Aerodrom aerodrom : aerodromi) {
 				List<AvionLeti> avioniPolasci;
@@ -63,6 +65,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 					if (avioniPolasci != null) {
 						System.out.println("Broj letova: " + avioniPolasci.size());
 						// TODO upiši podatke u tablicu AERODROMI_POLASCI
+						
 						for (AvionLeti a : avioniPolasci) {
 							System.out.println("Avion: " + a.getIcao24() + " Odredište: " + a.getEstArrivalAirport());
 						}
@@ -78,6 +81,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 					if (avioniDolasci != null) {
 						System.out.println("Broj letova: " + avioniDolasci.size());
 						// TODO upiši podatke u tablicu AERODROMI_DOLASCI
+						
 						for (AvionLeti a : avioniDolasci) {
 							System.out.println("Avion: " + a.getIcao24() + " Odredište: " + a.getEstDepartureAirport());
 						}
@@ -93,7 +97,6 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 			try {
 				Thread.sleep(vrijemeSpavanja);
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
@@ -102,6 +105,19 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 	@Override
 	public void interrupt() {
 		super.interrupt();
+	}
+	
+	public long izvrsiDatumPretvaranje (String datum) {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+		Date date = null;
+		try {
+			date = sdf.parse(datum);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		long milisekunde = date.getTime();
+		long sekunde = TimeUnit.MILLISECONDS.toSeconds(milisekunde);
+		return sekunde;
 	}
 
 }

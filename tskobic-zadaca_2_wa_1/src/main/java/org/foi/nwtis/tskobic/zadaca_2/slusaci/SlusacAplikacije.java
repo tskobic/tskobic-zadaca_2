@@ -40,7 +40,7 @@ public class SlusacAplikacije implements ServletContextListener {
 			return;
 		}
 
-		pra = new PreuzimanjeRasporedaAerodroma();
+		pra = new PreuzimanjeRasporedaAerodroma(context);
 		pra.start();
 		ServletContextListener.super.contextInitialized(sce);
 	}
