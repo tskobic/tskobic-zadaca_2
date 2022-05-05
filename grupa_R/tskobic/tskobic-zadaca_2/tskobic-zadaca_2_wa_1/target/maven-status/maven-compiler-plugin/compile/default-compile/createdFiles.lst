@@ -5,4 +5,5 @@ org\foi\nwtis\tskobic\zadaca_2\podaci\AerodromiPolasciDAO.class
 org\foi\nwtis\tskobic\zadaca_2\podaci\AerodromiPraceniDAO.class
 org\foi\nwtis\tskobic\zadaca_2\rest\RestProblemi.class
 org\foi\nwtis\tskobic\zadaca_2\podaci\AerodromiDolasciDAO.class
+org\foi\nwtis\tskobic\zadaca_2\podaci\AerodromiDAO.class
 org\foi\nwtis\tskobic\zadaca_2\dretve\PreuzimanjeRasporedaAerodroma.class

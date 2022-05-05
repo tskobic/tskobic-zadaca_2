@@ -20,42 +20,71 @@ import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPo
 
 public class AerodromiPraceniDAO {
 
-    public List<Aerodrom> dohvatiPraceneAerodrome(PostavkeBazaPodataka pbp) {
-        String url = pbp.getServerDatabase() + pbp.getUserDatabase();
-        String bpkorisnik = pbp.getUserUsername();
-        String bplozinka = pbp.getUserPassword();
-        String upit = "SELECT APR.IDENT AS ICAO, A.COORDINATES AS COORDINATES, A.ISO_COUNTRY AS COUNTRY, "
-        		+ "A.NAME AS NAME FROM PUBLIC.AERODROMI_PRACENI APR, PUBLIC.PUBLIC.AIRPORTS A WHERE APR.IDENT = A.IDENT;";
+	public List<Aerodrom> dohvatiPraceneAerodrome(PostavkeBazaPodataka pbp) {
+		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
+		String bpkorisnik = pbp.getUserUsername();
+		String bplozinka = pbp.getUserPassword();
+		String upit = "SELECT APR.IDENT AS ICAO, A.COORDINATES AS COORDINATES, A.ISO_COUNTRY AS COUNTRY, "
+				+ "A.NAME AS NAME FROM PUBLIC.AERODROMI_PRACENI APR, PUBLIC.PUBLIC.AIRPORTS A WHERE APR.IDENT = A.IDENT;";
 
-        try {
-            Class.forName(pbp.getDriverDatabase(url));
+		try {
+			Class.forName(pbp.getDriverDatabase(url));
 
-            List<Aerodrom> aerodromi = new ArrayList<>();
+			List<Aerodrom> aerodromi = new ArrayList<>();
 
-            try (
-                     Connection con = DriverManager.getConnection(url, bpkorisnik, bplozinka);
-                     Statement s = con.createStatement();
-                     ResultSet rs = s.executeQuery(upit)) {
+			try (Connection con = DriverManager.getConnection(url, bpkorisnik, bplozinka);
+					Statement s = con.createStatement();
+					ResultSet rs = s.executeQuery(upit)) {
 
-                while (rs.next()) {
-                    String drzava = rs.getString("COUNTRY");
-                    String icao = rs.getString("ICAO");
-                    String koordinate[] = rs.getString("COORDINATES").split(", ");
-                    Lokacija lokacija = new Lokacija();
-                    lokacija.postavi(koordinate[0], koordinate[1]);
-                    String naziv = rs.getString("NAME");
-                    Aerodrom a = new Aerodrom(icao, naziv, drzava, lokacija);
+				while (rs.next()) {
+					String drzava = rs.getString("COUNTRY");
+					String icao = rs.getString("ICAO");
+					String koordinate[] = rs.getString("COORDINATES").split(", ");
+					Lokacija lokacija = new Lokacija();
+					lokacija.postavi(koordinate[0], koordinate[1]);
+					String naziv = rs.getString("NAME");
+					Aerodrom a = new Aerodrom(icao, naziv, drzava, lokacija);
 
-                    aerodromi.add(a);
-                }
-                return aerodromi;
+					aerodromi.add(a);
+				}
+				return aerodromi;
 
-            } catch (SQLException ex) {
-                Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
+			} catch (SQLException ex) {
+				Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
+	}
+
+	public boolean dodajAerodromZaPracenje(String icao, PostavkeBazaPodataka pbp) {
+		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
+		String bpkorisnik = pbp.getUserUsername();
+		String bplozinka = pbp.getUserPassword();
+		String upit = "INSERT INTO PUBLIC.AERODROMI_PRACENI (IDENT, STORED) VALUES(?, ?);";
+
+		try {
+			Class.forName(pbp.getDriverDatabase(url));
+
+			try (Connection con = DriverManager.getConnection(url, bpkorisnik, bplozinka);
+					PreparedStatement s = con.prepareStatement(upit)) {
+				
+				Date datum = new Date();
+
+				s.setString(1, icao);
+				s.setTimestamp(2, new Timestamp(datum.getTime()));
+
+				int brojAzuriranja = s.executeUpdate();
+
+				return brojAzuriranja == 1;
+
+			} catch (Exception ex) {
+				Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(AerodromiPraceniDAO.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return false;
+	}
 }

@@ -8,7 +8,7 @@
 <title>T.Škobić - zadaća 2. - pregled jednog aerodroma</title>
 </head>
 <body>
-	<h1>Pregled svih aerodroma</h1>
+	<h1>Pregled jednog aerodroma</h1>
 	<a href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pocetak">Početak</a>
 	<br>
 	<table border="1">
