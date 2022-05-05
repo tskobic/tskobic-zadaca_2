@@ -9,7 +9,8 @@
 </head>
 <body>
 	<h1>Pregled svih aerodroma</h1>
-	<a href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pocetak">Početak</a>
+	<a
+		href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pocetak">Početak</a>
 	<br>
 	<table border="1">
 		<tr>
@@ -19,7 +20,8 @@
 		</tr>
 		<c:forEach var="a" items="${requestScope.aerodromi}">
 			<tr>
-				<td>${a.icao}</td>
+				<td><a
+					href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledJednogAerodroma/${a.icao}">${a.icao}</a></td>
 				<td>${a.naziv}</td>
 				<td>${a.drzava}</td>
 			</tr>

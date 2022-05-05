@@ -11,6 +11,7 @@ import jakarta.mvc.Models;
 import jakarta.mvc.View;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.PathParam;
 
 @Controller
 @Path("aerodromi")
@@ -34,5 +35,13 @@ public class PregledAerodroma {
 		List<Aerodrom> aerodromi = ak.dajSveAerodrome();
 		model.put("aerodromi", aerodromi);
 	}
-
+	
+	@GET
+	@Path("pregledJednogAerodroma/{icao}")
+	@View("pregledJednogAerodroma.jsp")
+	public void pregledJednogAerodroma(@PathParam("icao") String icao) {
+		AerodromiKlijent ak = new AerodromiKlijent();
+		Aerodrom aerodrom = ak.dajAerodrom(icao);
+		model.put("aerodrom", aerodrom);
+	}
 }
