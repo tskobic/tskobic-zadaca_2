@@ -29,6 +29,21 @@ public class AerodromiKlijent {
 		}
 		return aerodromi;
 	}
+	
+	public List<Aerodrom> dajPraceneAerodrome() {
+		Client client = ClientBuilder.newClient();
+		// TODO preuzeti adresu iz postavki
+		WebTarget webResource = client.target("http://localhost:8080/tskobic-zadaca_2_wa_1/api/aerodromi?preuzimanje");
+		Response restOdgovor = webResource.request().header("Accept", "application/json").get();
+		List<Aerodrom> aerodromi = null;
+		if (restOdgovor.getStatus() == 200) {
+			String odgovor = restOdgovor.readEntity(String.class);
+			Gson gson = new Gson();
+			aerodromi = new ArrayList<>();
+			aerodromi.addAll(Arrays.asList(gson.fromJson(odgovor, Aerodrom[].class)));
+		}
+		return aerodromi;
+	}
 
 	public Aerodrom dajAerodrom(String icao) {
 		Client client = ClientBuilder.newClient();

@@ -37,6 +37,15 @@ public class PregledAerodroma {
 	}
 	
 	@GET
+	@Path("pregledPracenihAerodroma")
+	@View("pregledPracenihAerodroma.jsp")
+	public void pregledPracenihAerodroma() {
+		AerodromiKlijent ak = new AerodromiKlijent();
+		List<Aerodrom> aerodromi = ak.dajPraceneAerodrome();
+		model.put("praceniAerodromi", aerodromi);
+	}
+	
+	@GET
 	@Path("pregledJednogAerodroma/{icao}")
 	@View("pregledJednogAerodroma.jsp")
 	public void pregledJednogAerodroma(@PathParam("icao") String icao) {

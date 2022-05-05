@@ -117,6 +117,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 		}
 		long milisekunde = date.getTime();
 		long sekunde = TimeUnit.MILLISECONDS.toSeconds(milisekunde);
+		
 		return sekunde;
 	}
 
