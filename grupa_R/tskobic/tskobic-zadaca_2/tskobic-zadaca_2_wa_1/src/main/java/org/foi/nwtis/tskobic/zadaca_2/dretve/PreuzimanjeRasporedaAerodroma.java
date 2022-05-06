@@ -11,7 +11,10 @@ import org.foi.nwtis.rest.klijenti.NwtisRestIznimka;
 import org.foi.nwtis.rest.klijenti.OSKlijent;
 import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiDolasciDAO;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiPolasciDAO;
 import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiPraceniDAO;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiProblemiDAO;
 
 import jakarta.servlet.ServletContext;
 
@@ -53,8 +56,12 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 
 	@Override
 	public void run() {
+		AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
+		AerodromiPolasciDAO aerodromiPolasciDAO = new AerodromiPolasciDAO();
+		AerodromiDolasciDAO aerodromiDolasciDAO = new AerodromiDolasciDAO();
+		AerodromiProblemiDAO aerodromiProblemiDAO = new AerodromiProblemiDAO();
+		
 		while (vrijemeObrade < preuzimanjeDo) {
-			AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
 			List<Aerodrom> aerodromi = aerodromiPraceniDAO.dohvatiPraceneAerodrome(konfig);
 
 			for (Aerodrom aerodrom : aerodromi) {
@@ -64,13 +71,15 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 							vrijemeObrade + preuzimanjeVrijeme);
 					if (avioniPolasci != null) {
 						System.out.println("Broj letova: " + avioniPolasci.size());
-						// TODO upiši podatke u tablicu AERODROMI_POLASCI
-						
 						for (AvionLeti a : avioniPolasci) {
 							System.out.println("Avion: " + a.getIcao24() + " Odredište: " + a.getEstArrivalAirport());
+							if(a.getEstArrivalAirport() != null) {
+								aerodromiPolasciDAO.dodajAerodromPolasci(a, konfig);
+							}
 						}
 					}
 				} catch (NwtisRestIznimka e) {
+					aerodromiProblemiDAO.dodajProblem(aerodrom.getIcao(), "Polasci: " + e.getMessage(), konfig);
 					e.printStackTrace();
 				}
 				System.out.println("Dolasci na aerodrom: " + aerodrom.getIcao());
@@ -80,13 +89,15 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 							vrijemeObrade + preuzimanjeVrijeme);
 					if (avioniDolasci != null) {
 						System.out.println("Broj letova: " + avioniDolasci.size());
-						// TODO upiši podatke u tablicu AERODROMI_DOLASCI
-						
 						for (AvionLeti a : avioniDolasci) {
-							System.out.println("Avion: " + a.getIcao24() + " Odredište: " + a.getEstDepartureAirport());
+							System.out.println("Avion: " + a.getIcao24() + " Polazište: " + a.getEstDepartureAirport());
+							if(a.getEstDepartureAirport() != null) {
+								aerodromiDolasciDAO.dodajAerodromDolasci(a, konfig);
+							}
 						}
 					}
 				} catch (NwtisRestIznimka e) {
+					aerodromiProblemiDAO.dodajProblem(aerodrom.getIcao(), "Dolasci: " + e.getMessage(), konfig);
 					e.printStackTrace();
 				}
 				// TODO napravi malu pauzu između 2 aerodroma

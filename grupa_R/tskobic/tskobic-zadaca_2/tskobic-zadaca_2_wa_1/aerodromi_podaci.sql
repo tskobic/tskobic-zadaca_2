@@ -1,4 +1,4 @@
-INSERT INTO AERODROMI_PRACENI (ident,stored) VALUES
+INSERT INTO AERODROMI_PRACENI (ident, `stored`) VALUES
 	 ('LDZA', now()),
 	 ('LOWW', now()),
 	 ('EDDF', now()),
