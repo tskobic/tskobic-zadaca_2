@@ -1,1 +1,1 @@
-{"resources":{"Scripts/Script.sql":{"sql-editor-data-source-id":"hsqldb_server-1808b7708ff-57683113145d1c69","default-datasource":"hsqldb_server-1808b7708ff-57683113145d1c69"}}}
+{"resources":{"Scripts/Script.sql":{"sql-editor-data-source-id":"mysql8-1808b774481-608523e58c26e3b7","default-datasource":"mysql8-1808b774481-608523e58c26e3b7","default-catalog":"PUBLIC"}}}

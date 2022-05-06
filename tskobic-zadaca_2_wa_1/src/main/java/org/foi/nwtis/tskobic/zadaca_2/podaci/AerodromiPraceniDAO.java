@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.foi.nwtis.podaci.Aerodrom;
-import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.rest.podaci.Lokacija;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
@@ -24,8 +23,8 @@ public class AerodromiPraceniDAO {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
 		String bplozinka = pbp.getUserPassword();
-		String upit = "SELECT APR.IDENT AS ICAO, A.COORDINATES AS COORDINATES, A.ISO_COUNTRY AS COUNTRY, "
-				+ "A.NAME AS NAME FROM PUBLIC.AERODROMI_PRACENI APR, PUBLIC.PUBLIC.AIRPORTS A WHERE APR.IDENT = A.IDENT;";
+		String upit = "SELECT APR.ident AS icao, A.coordinates AS coordinates, A.iso_country AS country, "
+				+ "A.name AS name FROM AERODROMI_PRACENI APR, airports A WHERE APR.ident = A.ident;";
 
 		try {
 			Class.forName(pbp.getDriverDatabase(url));
@@ -37,12 +36,12 @@ public class AerodromiPraceniDAO {
 					ResultSet rs = s.executeQuery(upit)) {
 
 				while (rs.next()) {
-					String drzava = rs.getString("COUNTRY");
-					String icao = rs.getString("ICAO");
-					String koordinate[] = rs.getString("COORDINATES").split(", ");
+					String drzava = rs.getString("country");
+					String icao = rs.getString("icao");
+					String koordinate[] = rs.getString("coordinates").split(", ");
 					Lokacija lokacija = new Lokacija();
 					lokacija.postavi(koordinate[0], koordinate[1]);
-					String naziv = rs.getString("NAME");
+					String naziv = rs.getString("name");
 					Aerodrom a = new Aerodrom(icao, naziv, drzava, lokacija);
 
 					aerodromi.add(a);
@@ -62,7 +61,7 @@ public class AerodromiPraceniDAO {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
 		String bplozinka = pbp.getUserPassword();
-		String upit = "INSERT INTO PUBLIC.AERODROMI_PRACENI (IDENT, STORED) VALUES(?, ?);";
+		String upit = "INSERT INTO AERODROMI_PRACENI (ident, `stored`) VALUES(?, ?);";
 
 		try {
 			Class.forName(pbp.getDriverDatabase(url));

@@ -5,6 +5,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import org.foi.nwtis.podaci.Aerodrom;
 import org.foi.nwtis.rest.klijenti.NwtisRestIznimka;
@@ -12,6 +14,8 @@ import org.foi.nwtis.rest.klijenti.OSKlijent;
 import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiDAO;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiDolasciDAO;
+import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiPolasciDAO;
 import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiPraceniDAO;
 
 import com.google.gson.Gson;
@@ -46,7 +50,7 @@ public class RestAerodromi {
 		Response odgovor = null;
 		PostavkeBazaPodataka konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
 		List<Aerodrom> aerodromi = null;
-		if(parametar) {
+		if (parametar) {
 			AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
 			aerodromi = aerodromiPraceniDAO.dohvatiPraceneAerodrome(konfig);
 		} else {
@@ -68,22 +72,23 @@ public class RestAerodromi {
 	@Consumes({ MediaType.APPLICATION_JSON })
 	public Response dodajAerodromZaPratiti(String sadrzaj) {
 		Response odgovor = null;
-		
+
 		Gson gson = new Gson();
-		JsonElement element = gson.fromJson (sadrzaj, JsonElement.class); 
-		JsonObject jsonObj = element.getAsJsonObject(); 
-		String icao = jsonObj.get("ICAO").getAsString(); 
+		JsonElement element = gson.fromJson(sadrzaj, JsonElement.class);
+		JsonObject jsonObj = element.getAsJsonObject();
+		String icao = jsonObj.get("icao").getAsString();
 
 		PostavkeBazaPodataka konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
 		AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
 		boolean status = aerodromiPraceniDAO.dodajAerodromZaPracenje(icao, konfig);
-		
-		if(status) {
+
+		if (status) {
 			odgovor = Response.status(201).entity("Aerodrom za praćenje dodan.").build();
 		} else {
-			odgovor = Response.status(201).entity("Aerodrom za praćenje nije dodan.").build();
+			odgovor = Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Aerodrom za praćenje nije dodan.")
+					.build();
 		}
-		
+
 		return odgovor;
 	}
 
@@ -120,24 +125,24 @@ public class RestAerodromi {
 	@Path("{icao}/polasci")
 	public Response dajPolaskeAerodoma(@PathParam("icao") String icao, @QueryParam("dan") String dan) {
 		Response odgovor = null;
-		
+
 		long datum = izvrsiDatumPretvaranje(dan);
 		PostavkeBazaPodataka konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
-		String korisnik = konfig.dajPostavku("OpenSkyNetwork.korisnik");
-		String lozinka = konfig.dajPostavku("OpenSkyNetwork.lozinka");
-		OSKlijent oSKlijent = new OSKlijent(korisnik, lozinka);
-		
-		List<AvionLeti> avioniPolasci = null;
-		try {
-			avioniPolasci = oSKlijent.getDepartures(icao, datum, datum + 86399);
-		} catch (NwtisRestIznimka e) {
-			e.printStackTrace();
-		}
-		
-		if (avioniPolasci != null) {
-			odgovor = Response.status(Response.Status.OK).entity(avioniPolasci).build();
+		AerodromiPolasciDAO aerodromiPolasciDAO = new AerodromiPolasciDAO();
+		List<AvionLeti> aerodromiPolasci = aerodromiPolasciDAO.dohvatiSvePolaske(konfig);
+
+		Predicate<AvionLeti> lambda1 = x -> x.getEstDepartureAirport().equals(icao);
+		Predicate<AvionLeti> lambda2 = x -> x.getFirstSeen() > datum;
+		Predicate<AvionLeti> lambda3 = x -> x.getFirstSeen() < datum + 86399;
+
+		List<AvionLeti> fAvioniDolasci = aerodromiPolasci.stream()
+				.filter(lambda1.and(lambda1).and(lambda2).and(lambda3)).collect(Collectors.toList());
+
+		if (!fAvioniDolasci.isEmpty()) {
+			odgovor = Response.status(Response.Status.OK).entity(fAvioniDolasci).build();
 		} else {
-			odgovor = Response.status(Response.Status.NOT_FOUND).entity("Nema polazaka na taj dan za aerodrom: " + icao).build();
+			odgovor = Response.status(Response.Status.NOT_FOUND).entity("Nema polazaka na taj dan za aerodrom: " + icao)
+					.build();
 		}
 
 		return odgovor;
@@ -148,30 +153,30 @@ public class RestAerodromi {
 	@Path("{icao}/dolasci")
 	public Response dajDolaskeAerodoma(@PathParam("icao") String icao, @QueryParam("dan") String dan) {
 		Response odgovor = null;
-		
+
 		long datum = izvrsiDatumPretvaranje(dan);
 		PostavkeBazaPodataka konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
-		String korisnik = konfig.dajPostavku("OpenSkyNetwork.korisnik");
-		String lozinka = konfig.dajPostavku("OpenSkyNetwork.lozinka");
-		OSKlijent oSKlijent = new OSKlijent(korisnik, lozinka);
-		
-		List<AvionLeti> avioniPolasci = null;
-		try {
-			avioniPolasci = oSKlijent.getArrivals(icao, datum, datum + 86399);
-		} catch (NwtisRestIznimka e) {
-			e.printStackTrace();
-		}
-		
-		if (avioniPolasci != null) {
-			odgovor = Response.status(Response.Status.OK).entity(avioniPolasci).build();
+		AerodromiDolasciDAO aerodromiDolasciDAO = new AerodromiDolasciDAO();
+		List<AvionLeti> aerodromiPolasci = aerodromiDolasciDAO.dohvatiSveDolaske(konfig);
+
+		Predicate<AvionLeti> lambda1 = x -> x.getEstArrivalAirport().equals(icao);
+		Predicate<AvionLeti> lambda2 = x -> x.getLastSeen() > datum;
+		Predicate<AvionLeti> lambda3 = x -> x.getLastSeen() < datum + 86399;
+
+		List<AvionLeti> fAvioniDolasci = aerodromiPolasci.stream()
+				.filter(lambda1.and(lambda1).and(lambda2).and(lambda3)).collect(Collectors.toList());
+
+		if (!fAvioniDolasci.isEmpty()) {
+			odgovor = Response.status(Response.Status.OK).entity(fAvioniDolasci).build();
 		} else {
-			odgovor = Response.status(Response.Status.NOT_FOUND).entity("Nema dolazaka na taj dan za aerodrom: " + icao).build();
+			odgovor = Response.status(Response.Status.NOT_FOUND).entity("Nema dolazaka na taj dan za aerodrom: " + icao)
+					.build();
 		}
 
 		return odgovor;
 	}
-	
-	public long izvrsiDatumPretvaranje (String datum) {
+
+	public long izvrsiDatumPretvaranje(String datum) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = null;
 		try {
@@ -181,7 +186,7 @@ public class RestAerodromi {
 		}
 		long milisekunde = date.getTime();
 		long sekunde = TimeUnit.MILLISECONDS.toSeconds(milisekunde);
-		
+
 		return sekunde;
 	}
 }

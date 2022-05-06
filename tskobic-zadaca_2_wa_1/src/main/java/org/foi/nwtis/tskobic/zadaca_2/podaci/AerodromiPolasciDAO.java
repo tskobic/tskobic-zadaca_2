@@ -4,7 +4,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -18,14 +17,67 @@ import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPo
 
 public class AerodromiPolasciDAO {
 
+	public List<AvionLeti> dohvatiSvePolaske(PostavkeBazaPodataka pbp) {
+		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
+		String bpkorisnik = pbp.getUserUsername();
+		String bplozinka = pbp.getUserPassword();
+		String upit = "SELECT id, icao24, firstSeen, estDepartureAirport, lastSeen, estArrivalAirport, "
+				+ "callsign, estDepartureAirportHorizDistance, "
+				+ "estDepartureAirportVertDistance, estArrivalAirportHorizDistance, "
+				+ "estArrivalAirportVertDistance, departureAirportCandidatesCount, arrivalAirportCandidatesCount, `stored` "
+				+ "FROM AERODROMI_POLASCI;";
+
+		try {
+			Class.forName(pbp.getDriverDatabase(url));
+
+			List<AvionLeti> aerodromPolasci = new ArrayList<>();
+
+            try (
+                    Connection con = DriverManager.getConnection(url, bpkorisnik, bplozinka);
+                    Statement s = con.createStatement();
+                    ResultSet rs = s.executeQuery(upit)) {
+
+				while (rs.next()) {
+					String icao24 = rs.getString("icao24");
+					int firstSeen = rs.getInt("firstSeen");
+					String estDepartureAirport = rs.getString("estDepartureAirport");
+					int lastSeen = rs.getInt("lastSeen");
+					String estArrivalAirport = rs.getString("estArrivalAirport");
+					String callsign = rs.getString("callsign");
+					int estDepartureAirportHorizDistance = rs.getInt("estDepartureAirportHorizDistance");
+					int estDepartureAirportVertDistance = rs.getInt("estDepartureAirportVertDistance");
+					int estArrivalAirportHorizDistance = rs.getInt("estArrivalAirportHorizDistance");
+					int estArrivalAirportVertDistance = rs.getInt("estArrivalAirportVertDistance");
+					int departureAirportCandidatesCount = rs.getInt("departureAirportCandidatesCount");
+					int arrivalAirportCandidatesCount = rs.getInt("arrivalAirportCandidatesCount");
+
+					AvionLeti avionLeti = new AvionLeti(icao24, firstSeen, estDepartureAirport, lastSeen,
+							estArrivalAirport, callsign, estDepartureAirportHorizDistance,
+							estDepartureAirportVertDistance, estArrivalAirportHorizDistance,
+							estArrivalAirportVertDistance, departureAirportCandidatesCount,
+							arrivalAirportCandidatesCount);
+
+					aerodromPolasci.add(avionLeti);
+				}
+				return aerodromPolasci;
+
+			} catch (Exception ex) {
+				Logger.getLogger(AerodromiProblemiDAO.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		} catch (ClassNotFoundException ex) {
+			Logger.getLogger(AerodromiProblemiDAO.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return null;
+	}
+
 	public boolean dodajAerodromPolasci(AvionLeti al, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
 		String bplozinka = pbp.getUserPassword();
-		String upit = "INSERT INTO AERODROMI_POLASCI "
-				+ "(ICAO24, FIRSTSEEN, ESTDEPARTUREAIRPORT, LASTSEEN, ESTARRIVALAIRPORT, "
-				+ "CALLSIGN, ESTDEPARTUREAIRPORTHORIZDISTANCE, ESTDEPARTUREAIRPORTVERTDISTANCE, ESTARRIVALAIRPORTHORIZDISTANCE, "
-				+ "ESTARRIVALAIRPORTVERTDISTANCE, DEPARTUREAIRPORTCANDIDATESCOUNT, ARRIVALAIRPORTCANDIDATESCOUNT, STORED) "
+		String upit = "INSERT IGNORE INTO AERODROMI_POLASCI "
+				+ "(icao24, firstSeen, estDepartureAirport, lastSeen, estArrivalAirport, "
+				+ "callsign, estDepartureAirportHorizDistance, estDepartureAirportVertDistance, estArrivalAirportHorizDistance, "
+				+ "estArrivalAirportVertDistance, departureAirportCandidatesCount, arrivalAirportCandidatesCount, `stored`) "
 				+ "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		try {
@@ -33,6 +85,8 @@ public class AerodromiPolasciDAO {
 
 			try (Connection con = DriverManager.getConnection(url, bpkorisnik, bplozinka);
 					PreparedStatement s = con.prepareStatement(upit)) {
+
+				Date datum = new Date();
 
 				s.setString(1, al.getIcao24());
 				s.setInt(2, al.getFirstSeen());
@@ -46,7 +100,7 @@ public class AerodromiPolasciDAO {
 				s.setInt(10, al.getEstArrivalAirportVertDistance());
 				s.setInt(11, al.getDepartureAirportCandidatesCount());
 				s.setInt(12, al.getArrivalAirportCandidatesCount());
-				s.setTimestamp(13, (Timestamp) new Date());
+				s.setTimestamp(13, new Timestamp(datum.getTime()));
 
 				int brojAzuriranja = s.executeUpdate();
 

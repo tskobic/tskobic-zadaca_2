@@ -24,7 +24,7 @@ public class AerodromiDAO {
         String url = pbp.getServerDatabase() + pbp.getUserDatabase();
         String bpkorisnik = pbp.getUserUsername();
         String bplozinka = pbp.getUserPassword();
-        String upit = "SELECT ISO_COUNTRY AS COUNTRY, IDENT AS ICAO, COORDINATES, NAME FROM PUBLIC.AIRPORTS;";
+        String upit = "SELECT iso_country AS country, ident AS icao, coordinates, name FROM airports;";
 
         try {
             Class.forName(pbp.getDriverDatabase(url));
@@ -37,12 +37,12 @@ public class AerodromiDAO {
                      ResultSet rs = s.executeQuery(upit)) {
 
                 while (rs.next()) {
-                    String drzava = rs.getString("COUNTRY");
-                    String icao = rs.getString("ICAO");
-                    String koordinate[] = rs.getString("COORDINATES").split(", ");
+                    String drzava = rs.getString("country");
+                    String icao = rs.getString("icao");
+                    String koordinate[] = rs.getString("coordinates").split(", ");
                     Lokacija lokacija = new Lokacija();
                     lokacija.postavi(koordinate[0], koordinate[1]);
-                    String naziv = rs.getString("NAME");
+                    String naziv = rs.getString("name");
                     Aerodrom a = new Aerodrom(icao, naziv, drzava, lokacija);
 
                     aerodromi.add(a);
