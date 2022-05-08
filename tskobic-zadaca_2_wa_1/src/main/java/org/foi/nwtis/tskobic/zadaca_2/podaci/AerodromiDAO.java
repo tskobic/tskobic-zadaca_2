@@ -2,24 +2,29 @@ package org.foi.nwtis.tskobic.zadaca_2.podaci;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.foi.nwtis.podaci.Aerodrom;
-import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.rest.podaci.Lokacija;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
+/**
+ * Klasa AerodromiDAO za pristup bazi.
+ */
 public class AerodromiDAO {
 
+    /**
+     * Dohvaća sve aerodrome.
+     *
+     * @param pbp postavke baze podataka
+     * @return the lista aerodroma
+     */
     public List<Aerodrom> dohvatiSveAerodrome(PostavkeBazaPodataka pbp) {
         String url = pbp.getServerDatabase() + pbp.getUserDatabase();
         String bpkorisnik = pbp.getUserUsername();

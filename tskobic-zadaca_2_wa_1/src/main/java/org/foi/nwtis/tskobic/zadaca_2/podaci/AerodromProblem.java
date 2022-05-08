@@ -8,6 +8,10 @@ import java.util.Date;
 
 import lombok.AllArgsConstructor;
 
+/**
+*
+* Klasa za aerodrom problem
+*/
 @AllArgsConstructor
 public class AerodromProblem {
     @Getter

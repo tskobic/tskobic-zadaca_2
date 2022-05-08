@@ -17,8 +17,17 @@ import org.foi.nwtis.podaci.Aerodrom;
 import org.foi.nwtis.rest.podaci.Lokacija;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
+/**
+ * Klasa AerodromiPraceniDAO za pristup bazi podataka.
+ */
 public class AerodromiPraceniDAO {
 
+	/**
+	 * Dohvaća praćene aerodrome.
+	 *
+	 * @param pbp postavke baze podataka
+	 * @return lista praćenih aerodroma
+	 */
 	public List<Aerodrom> dohvatiPraceneAerodrome(PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -57,6 +66,13 @@ public class AerodromiPraceniDAO {
 		return null;
 	}
 
+	/**
+	 * Dodaje aerodrom za praćenje.
+	 *
+	 * @param icao icao
+	 * @param pbp postavke baze podataka
+	 * @return true, ako je uspješno dodavanje
+	 */
 	public boolean dodajAerodromZaPracenje(String icao, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();

@@ -15,8 +15,17 @@ import java.util.logging.Logger;
 import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
+/**
+ * Klasa AerodromiDolasciDAO za pristup bazi.
+ */
 public class AerodromiDolasciDAO {
 	
+	/**
+	 * Dohvaća sve dolaske aviona.
+	 *
+	 * @param pbp postavke baze podataka
+	 * @return the lista aviona koji su sletjeli na aerodrom
+	 */
 	public List<AvionLeti> dohvatiSveDolaske(PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -70,6 +79,13 @@ public class AerodromiDolasciDAO {
 		return null;
 	}
 
+	/**
+	 * Dodaje avion koji ste stigao na odredište.
+	 *
+	 * @param al klasa koja predstavlja avion koji je sletio
+	 * @param pbp postavke baze podataka
+	 * @return true, ako je uspješno dodavanje
+	 */
 	public boolean dodajAerodromDolasci(AvionLeti al, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();

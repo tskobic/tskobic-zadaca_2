@@ -15,17 +15,13 @@
 			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledPracenihAerodroma">Pregled
 				praćenih aerodroma</a></li>
 		<li><a
-			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledAerodroma">Pregled
-				jednog aerodroma</a></li>
+			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/dodavanjeAerodromaZaPreuzimanje">Dodavanje
+				aerodroma za preuzimanje</a></li>
 		<li><a
-			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledPolazakaAerodroma">Pregled
-				polazaka s aerodroma</a></li>
+			href="${pageContext.servletContext.contextPath}/mvc/problemi/pregledSvihProblema">Pregled
+				svih problema</a></li>
 		<li><a
-			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledDolazakaAerodroma">Pregled
-				dolazaka na aerodrom</a></li>
-		<li><a
-			href="${pageContext.servletContext.contextPath}/mvc/aerodromi/dodajAerodrom">Dodaj
-				aerodrom</a></li>
+			href="${pageContext.servletContext.contextPath}/mvc/problemi/brisanjeProblema">Brisanje problema od jednog aerodroma</a></li>
 	</ul>
 </body>
 </html>
