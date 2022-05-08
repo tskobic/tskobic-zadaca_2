@@ -18,25 +18,69 @@ import org.foi.nwtis.tskobic.zadaca_2.podaci.AerodromiProblemiDAO;
 
 import jakarta.servlet.ServletContext;
 
+/**
+ * Dretva PreuzimanjeRasporedaAerodroma koja dobavlja podatke o polijetanju i slijetanju aviona.
+ */
 public class PreuzimanjeRasporedaAerodroma extends Thread {
 
+	/** datum od kojeg se počinje preuzimanje. */
 	long preuzimanjeOd;
-	long preuzimanjeDo;
-	long preuzimanjeVrijeme;
-	long vrijemePauza;
-	long vrijemeCiklusa;
-	long vrijemeObrade;
-	String korisnik;
-	String lozinka;
-	OSKlijent oSKlijent;
-	ServletContext context;
-	PostavkeBazaPodataka konfig;
 	
+	/** datum do kojeg se preuzimaju podaci. */
+	long preuzimanjeDo;
+	
+	/** vrijeme za koje se preuzimaju podaci u jednom ciklusu */
+	long preuzimanjeVrijeme;
+	
+	/** pauza između dva aerodroma */
+	long vrijemePauza;
+	
+	/** vrijeme ciklusa. */
+	long vrijemeCiklusa;
+	
+	/** vrijeme obrade. */
+	long vrijemeObrade;
+	
+	/** aerodromi praceni DAO. */
+	AerodromiPraceniDAO aerodromiPraceniDAO;
+	
+	/** aerodromi polasci DAO. */
+	AerodromiPolasciDAO aerodromiPolasciDAO;
+	
+	/** aerodromi dolasci DAO. */
+	AerodromiDolasciDAO aerodromiDolasciDAO;
+	
+	/** aerodromi problemi DAO. */
+	AerodromiProblemiDAO aerodromiProblemiDAO;
+	
+	/** korisnik. */
+	String korisnik;
+	
+	/** lozinka. */
+	String lozinka;
+	
+	/** OpenSkyNewtork klijent. */
+	OSKlijent oSKlijent;
+	
+	/** kontekst servleta. */
+	ServletContext context;
+	
+	/** postavke baze podataka. */
+	PostavkeBazaPodataka konfig;
+
+	/**
+	 * Konstruktor dretve
+	 *
+	 * @param context kontekst servleta
+	 */
 	public PreuzimanjeRasporedaAerodroma(ServletContext context) {
 		this.context = context;
 		this.konfig = (PostavkeBazaPodataka) context.getAttribute("Postavke");
 	}
 
+	/**
+	 * Metoda za pokretanje dretve
+	 */
 	@Override
 	public synchronized void start() {
 		preuzimanjeOd = izvrsiDatumPretvaranje(konfig.dajPostavku("preuzimanje.od"));
@@ -46,6 +90,11 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 		vrijemeCiklusa = Long.parseLong(konfig.dajPostavku("ciklus.vrijeme")) * 1000;
 		vrijemeObrade = preuzimanjeOd;
 
+		aerodromiPraceniDAO = new AerodromiPraceniDAO();
+		aerodromiPolasciDAO = new AerodromiPolasciDAO();
+		aerodromiDolasciDAO = new AerodromiDolasciDAO();
+		aerodromiProblemiDAO = new AerodromiProblemiDAO();
+
 		korisnik = konfig.dajPostavku("OpenSkyNetwork.korisnik");
 		lozinka = konfig.dajPostavku("OpenSkyNetwork.lozinka");
 
@@ -54,13 +103,11 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 		super.start();
 	}
 
+	/**
+	 * Glavna metoda za rad dretve
+	 */
 	@Override
 	public void run() {
-		AerodromiPraceniDAO aerodromiPraceniDAO = new AerodromiPraceniDAO();
-		AerodromiPolasciDAO aerodromiPolasciDAO = new AerodromiPolasciDAO();
-		AerodromiDolasciDAO aerodromiDolasciDAO = new AerodromiDolasciDAO();
-		AerodromiProblemiDAO aerodromiProblemiDAO = new AerodromiProblemiDAO();
-		
 		while (vrijemeObrade < preuzimanjeDo) {
 			List<Aerodrom> aerodromi = aerodromiPraceniDAO.dohvatiPraceneAerodrome(konfig);
 
@@ -73,7 +120,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 						System.out.println("Broj letova: " + avioniPolasci.size());
 						for (AvionLeti a : avioniPolasci) {
 							System.out.println("Avion: " + a.getIcao24() + " Odredište: " + a.getEstArrivalAirport());
-							if(a.getEstArrivalAirport() != null) {
+							if (a.getEstArrivalAirport() != null) {
 								aerodromiPolasciDAO.dodajAerodromPolasci(a, konfig);
 							}
 						}
@@ -91,7 +138,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 						System.out.println("Broj letova: " + avioniDolasci.size());
 						for (AvionLeti a : avioniDolasci) {
 							System.out.println("Avion: " + a.getIcao24() + " Polazište: " + a.getEstDepartureAirport());
-							if(a.getEstDepartureAirport() != null) {
+							if (a.getEstDepartureAirport() != null) {
 								aerodromiDolasciDAO.dodajAerodromDolasci(a, konfig);
 							}
 						}
@@ -113,12 +160,21 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 		}
 	}
 
+	/**
+	 * Metoda za prekidanje rada dretve.
+	 */
 	@Override
 	public void interrupt() {
 		super.interrupt();
 	}
-	
-	public long izvrsiDatumPretvaranje (String datum) {
+
+	/**
+	 * Pretvara datum iz stringa u sekunde
+	 *
+	 * @param datum datum
+	 * @return the long
+	 */
+	public long izvrsiDatumPretvaranje(String datum) {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
 		Date date = null;
 		try {
@@ -128,7 +184,7 @@ public class PreuzimanjeRasporedaAerodroma extends Thread {
 		}
 		long milisekunde = date.getTime();
 		long sekunde = TimeUnit.MILLISECONDS.toSeconds(milisekunde);
-		
+
 		return sekunde;
 	}
 

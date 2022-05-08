@@ -15,13 +15,29 @@
 	<table border="1">
 		<tr>
 			<th>ICAO</th>
+			<th>Polasci</th>
+			<th>Dolasci</th>
 			<th>Naziv</th>
 			<th>Država</th>
 		</tr>
 		<c:forEach var="a" items="${requestScope.praceniAerodromi}">
 			<tr>
 				<td><a
-					href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledJednogAerodroma/${a.icao}">${a.icao}</a></td>
+					href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledSvihAerodroma/${a.icao}">${a.icao}</a></td>
+				<td><form
+						action="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledAerodromPolazaka/${a.icao}"
+						method="GET">
+						<label for="dan">Dan:</label><br>
+						<input type="text" id="dan" name="dan">
+						<input type="submit" value="Pregledaj">
+					</form></td>
+				<td><form
+						action="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledAerodromDolazaka/${a.icao}"
+						method="GET">
+						<label for="dan">Dan:</label><br>
+						<input type="text" id="dan" name="dan">
+						<input type="submit" value="Pregledaj">
+					</form></td>
 				<td>${a.naziv}</td>
 				<td>${a.drzava}</td>
 			</tr>

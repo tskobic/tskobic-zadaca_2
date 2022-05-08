@@ -18,8 +18,17 @@ import java.util.logging.Logger;
 
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
+/**
+ * Klasa AerodromiProblemiDAO za pristup bazi podataka.
+ */
 public class AerodromiProblemiDAO {
 
+	/**
+	 * Dohvaća sve problema aerodroma.
+	 *
+	 * @param pbp postavke baze podataka
+	 * @return the lista problema aerodroma
+	 */
 	public List<AerodromProblem> dohvatiSveProbleme(PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -55,6 +64,14 @@ public class AerodromiProblemiDAO {
 		return null;
 	}
 
+	/**
+	 * Dodavanje problema za aerodrom.
+	 *
+	 * @param icao icao
+	 * @param opis opis problema
+	 * @param pbp postavke baze podataka
+	 * @return true, ako je uspješno dodavanje
+	 */
 	public boolean dodajProblem(String icao, String opis, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -86,6 +103,13 @@ public class AerodromiProblemiDAO {
 		return false;
 	}
 	
+	/**
+	 * Briše probleme za određeni aerodrom.
+	 *
+	 * @param icao icao
+	 * @param pbp postavke baze podataka
+	 * @return true, ako je uspješno brisanje
+	 */
 	public boolean izbrisiProblem(String icao, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -102,7 +126,7 @@ public class AerodromiProblemiDAO {
 
 				int brojAzuriranja = s.executeUpdate();
 
-				return brojAzuriranja == 1;
+				return brojAzuriranja > 0;
 
 			} catch (Exception ex) {
 				Logger.getLogger(AerodromiProblemiDAO.class.getName()).log(Level.SEVERE, null, ex);

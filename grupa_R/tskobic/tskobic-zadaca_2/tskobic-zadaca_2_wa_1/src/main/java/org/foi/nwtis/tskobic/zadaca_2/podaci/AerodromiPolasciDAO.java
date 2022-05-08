@@ -15,8 +15,17 @@ import java.util.logging.Logger;
 import org.foi.nwtis.rest.podaci.AvionLeti;
 import org.foi.nwtis.tskobic.vjezba_06.konfiguracije.bazaPodataka.PostavkeBazaPodataka;
 
+/**
+ * Klasa AerodromiPolasciDAO za pristup bazi.
+ */
 public class AerodromiPolasciDAO {
 
+	/**
+	 * Dohvaća sve polaske aviona.
+	 *
+	 * @param pbp pristup bazi podataka
+	 * @return the lista polazaka
+	 */
 	public List<AvionLeti> dohvatiSvePolaske(PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();
@@ -70,6 +79,13 @@ public class AerodromiPolasciDAO {
 		return null;
 	}
 
+	/**
+	 * Dodaje avion koji je poletio sa polazišta.
+	 *
+	 * @param al klasa koja predstavlja avion u letu
+	 * @param pbp postavke baze podataka
+	 * @return true, ako je uspješno dodavanje
+	 */
 	public boolean dodajAerodromPolasci(AvionLeti al, PostavkeBazaPodataka pbp) {
 		String url = pbp.getServerDatabase() + pbp.getUserDatabase();
 		String bpkorisnik = pbp.getUserUsername();

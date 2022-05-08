@@ -1,0 +1,24 @@
+#NWTiS 2022.
+#Sun May 08 01:26:04 CEST 2022
+preuzimanje.do=31.12.2022
+LocationIQ.token=pk.8d5321e48f5562c1bd4f22d891b78370
+jdbc.derby=org.apache.derby.jdbc.ClientDriver
+OpenWeatherMap.apikey=a5dccbbaedf27ac79ddb41b0e20e4119
+dnevnik.datoteka=NWTiS_dnevnik.txt
+ciklus.korekcija=10
+user.username=nwtis_g1
+jdbc.hsqldb.hsql=org.hsqldb.jdbcDriver
+preuzimanje.od=01.01.2022
+user.password=nwtis\#g1
+user.database=nwtis_g1?useSSL\=false&serverTimezone\=UTC&allowPublicKeyRetrieval\=true
+preuzimanje.vrijeme=6
+preuzimanje.odmak=3
+ciklus.vrijeme=300
+server.database=jdbc\:mysql\://localhost\:3306/
+admin.password=nwtis_foi
+admin.database=nwtis_g1
+OpenSkyNetwork.lozinka=nwtis22
+preuzimanje.pauza=20
+jdbc.mysql=com.mysql.cj.jdbc.Driver
+admin.username=nwtis_admin
+OpenSkyNetwork.korisnik=tskobic

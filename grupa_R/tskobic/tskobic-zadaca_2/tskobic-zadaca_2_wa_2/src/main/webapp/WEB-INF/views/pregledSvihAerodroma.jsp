@@ -21,7 +21,7 @@
 		<c:forEach var="a" items="${requestScope.aerodromi}">
 			<tr>
 				<td><a
-					href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledJednogAerodroma/${a.icao}">${a.icao}</a></td>
+					href="${pageContext.servletContext.contextPath}/mvc/aerodromi/pregledSvihAerodroma/${a.icao}">${a.icao}</a></td>
 				<td>${a.naziv}</td>
 				<td>${a.drzava}</td>
 			</tr>
